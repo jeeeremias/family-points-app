@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Family Points</string>
+
+    <string name="nav_header_title">Pai</string>
+    <string name="nav_header_subtitle">Family Points - Seção dos pais</string>
+    <string name="nav_header_desc">Foto do Pai</string>
+
+    <string name="menu_home">Início</string>
+    <string name="menu_participants">Participantes</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
