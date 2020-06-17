@@ -1,4 +1,4 @@
-package com.familypoints
+package com.jreis.familypoints
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.familypoints.HomeFragment"
+        android:name="com.jreis.familypoints.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home">
     </fragment>
     <fragment
         android:id="@+id/nav_participants"
-        android:name="com.familypoints.ParticipantsFragment"
+        android:name="com.jreis.familypoints.ParticipantsFragment"
         android:label="@string/menu_participants"
         tools:layout="@layout/fragment_participants" />
 
