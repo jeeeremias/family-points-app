@@ -12,5 +12,9 @@
             android:id="@+id/nav_participants"
             android:icon="@drawable/ic_participants"
             android:title="@string/menu_participants" />
+        <item
+            android:id="@+id/nav_tasks"
+            android:icon="@drawable/ic_task"
+            android:title="@string/menu_tasks" />
     </group>
 </menu>
