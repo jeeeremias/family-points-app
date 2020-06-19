@@ -1,10 +1,12 @@
 package com.jreis.familypoints.holder
 
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.storage.FirebaseStorage
 import com.jreis.familypoints.R
 import com.jreis.familypoints.dto.User
 
@@ -14,10 +16,17 @@ class UserViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
     private var nameTextView: TextView = itemView.findViewById(R.id.text_item_name)
     private var kinshipTextView: TextView = itemView.findViewById(R.id.text_item_kinship)
     private var image: ImageView = itemView.findViewById(R.id.image_item_user)
+    private val storage = FirebaseStorage.getInstance()
 
     fun bind(user: User) {
         nameTextView.text = user.firstName
         kinshipTextView.text = user.kinship
-        image.setImageResource(R.drawable.ic_person)
+        val oneMegabyte: Long = 1024 * 1024
+        storage.getReference(user.profilePic).getBytes(oneMegabyte).addOnSuccessListener {
+            val img = BitmapFactory.decodeByteArray(it, 0, it.size)
+            image.setImageBitmap(img)
+        }.addOnFailureListener {
+            image.setImageResource(R.drawable.img_bravo)
+        }
     }
 }
