@@ -11,18 +11,8 @@ import com.jreis.familypoints.adapter.UserAdapter
 import com.jreis.familypoints.dto.User
 import kotlinx.android.synthetic.main.fragment_participants.*
 
-private const val REQUESTER_USER = "requesterUser"
-
 class ParticipantsFragment : Fragment() {
     private val database = FirebaseDatabase.getInstance().getReference("users")
-    private var requesterId: Long? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            requesterId = it.getLong(REQUESTER_USER)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,23 +40,5 @@ class ParticipantsFragment : Fragment() {
             }
 
         })
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param requesterId Id of user logged and wont be included to the list of participants.
-         * @return A new instance of fragment ParticipantsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(requesterId: Long) =
-            ParticipantsFragment().apply {
-                arguments = Bundle().apply {
-                    putLong(REQUESTER_USER, requesterId)
-                }
-            }
     }
 }
