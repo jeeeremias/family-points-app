@@ -12,7 +12,7 @@ import com.jreis.familypoints.dto.User
 import kotlinx.android.synthetic.main.fragment_participants.*
 
 class ParticipantsFragment : Fragment() {
-    private val database = FirebaseDatabase.getInstance().getReference("users")
+    private val usersDatabase = FirebaseDatabase.getInstance().getReference("users")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,7 +23,8 @@ class ParticipantsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        database.addListenerForSingleValueEvent(object: ValueEventListener {
+        super.onViewCreated(view, savedInstanceState)
+        usersDatabase.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 TODO("Not yet implemented")
             }
