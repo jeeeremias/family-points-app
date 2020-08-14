@@ -13,9 +13,9 @@ import com.jreis.familypoints.dto.User
 class UserViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
     RecyclerView.ViewHolder(inflater.inflate(R.layout.list_item_with_image, parent, false)) {
 
-    private var nameTextView: TextView = itemView.findViewById(R.id.text_item_name)
-    private var kinshipTextView: TextView = itemView.findViewById(R.id.text_item_kinship)
-    private var image: ImageView = itemView.findViewById(R.id.image_item_user)
+    private val nameTextView: TextView = itemView.findViewById(R.id.text_item_name)
+    private val kinshipTextView: TextView = itemView.findViewById(R.id.text_item_kinship)
+    private val image: ImageView = itemView.findViewById(R.id.image_item_user)
     private val storage = FirebaseStorage.getInstance()
 
     fun bind(user: User) {

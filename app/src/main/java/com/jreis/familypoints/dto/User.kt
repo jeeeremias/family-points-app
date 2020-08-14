@@ -1,6 +1,9 @@
 package com.jreis.familypoints.dto
 
-class User() {
+import java.io.Serializable
+
+class User(): Serializable {
+    var id = ""
     var firstName = ""
     var kinship = ""
     var profilePic = ""

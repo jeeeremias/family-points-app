@@ -36,7 +36,10 @@ class TasksFragment : Fragment() {
 
             override fun onDataChange(usersSnapshot: DataSnapshot) {
                 for (userSnapshot in usersSnapshot.children) {
-                    userSnapshot.getValue(User::class.java)?.let { users.add(it) }
+                    userSnapshot.getValue(User::class.java)?.let {
+                        it.id = userSnapshot.key!!
+                        users.add(it)
+                    }
                 }
                 recyclerView_user_routines.apply {
                     layoutManager = LinearLayoutManager(activity)
@@ -44,6 +47,7 @@ class TasksFragment : Fragment() {
                         override fun onItemClick(position: Int) {
                             val user = users[position]
                             val intent = Intent(context, UserRoutineActivity::class.java)
+                            intent.putExtra("user", user)
                             startActivity(intent)
                         }
                     })
