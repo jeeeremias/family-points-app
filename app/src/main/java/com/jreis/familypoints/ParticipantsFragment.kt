@@ -1,6 +1,7 @@
 package com.jreis.familypoints
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_participants.*
 
 class ParticipantsFragment : Fragment() {
     private val usersDatabase = FirebaseDatabase.getInstance().getReference("users")
+    private val users = ArrayList<User>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +32,6 @@ class ParticipantsFragment : Fragment() {
             }
 
             override fun onDataChange(usersSnapshot: DataSnapshot) {
-                val users = ArrayList<User>()
                 for (userSnapshot in usersSnapshot.children) {
                     userSnapshot.getValue(User::class.java)?.let { users.add(it) }
                 }

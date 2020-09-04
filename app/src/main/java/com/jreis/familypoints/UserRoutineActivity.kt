@@ -1,25 +1,31 @@
 package com.jreis.familypoints
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.jreis.familypoints.adapter.TaskAdapter
+import com.jreis.familypoints.contract.RoutineTaskResultContract
 import com.jreis.familypoints.dto.Task
+import com.jreis.familypoints.dto.TaskByTimeComparator
+import com.jreis.familypoints.dto.TaskDatabaseObject
 import com.jreis.familypoints.dto.User
 import kotlinx.android.synthetic.main.activity_user_routine.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class UserRoutineActivity : AppCompatActivity() {
 
     private val database = FirebaseDatabase.getInstance()
-    private val tasks = ArrayList<Task>(20)
+    private val tasks = TreeSet<Task>(TaskByTimeComparator())
+    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,9 +34,7 @@ class UserRoutineActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.user_routine_toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
-        val user = intent.getSerializableExtra("user") as User
-
+        user = intent.getSerializableExtra("user") as User
         val userRoutineDatabase = database.getReference("user_routines/" + user.id + "/monday")
 
         userRoutineDatabase.addListenerForSingleValueEvent(object: ValueEventListener {
@@ -47,13 +51,11 @@ class UserRoutineActivity : AppCompatActivity() {
                         tasks.add(it)
                     }
                 }
-                Thread.sleep(300)
                 recyclerView_routine.apply {
                     layoutManager = LinearLayoutManager(context)
-                    adapter = TaskAdapter(tasks)
+                    adapter = TaskAdapter(ArrayList(tasks))
                 }
             }
-
         })
 
     }
@@ -75,8 +77,19 @@ class UserRoutineActivity : AppCompatActivity() {
     }
 
     private fun openCreateActivity(): Boolean {
-        val intent = Intent(baseContext, CreateUserActivityActivity::class.java)
-        startActivity(intent)
+        val userRoutineDatabase = database.getReference("user_routines/" + user.id + "/monday")
+        registerForActivityResult(RoutineTaskResultContract()) { task: Task? ->
+            task?.let {
+                userRoutineDatabase.child(it.time)
+                    .setValue(TaskDatabaseObject(it.name, it.icon))
+                    .addOnSuccessListener { _ ->
+                        tasks.add(it)
+                        recyclerView_routine.apply {
+                            (adapter as TaskAdapter).addItem(it, tasks.indexOf(it))
+                        }
+                    }
+            }
+        }
         return true
     }
 
