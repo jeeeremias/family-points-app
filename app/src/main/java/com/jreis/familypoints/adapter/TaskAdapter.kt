@@ -21,6 +21,6 @@ class TaskAdapter(private val tasks: ArrayList<Task>) : RecyclerView.Adapter<Tas
 
     fun addItem(task: Task, index: Int) {
         tasks.add(index, task)
-        notifyItemChanged(index)
+        notifyItemInserted(index)
     }
 }

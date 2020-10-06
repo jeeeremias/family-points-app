@@ -1,10 +1,10 @@
 package com.jreis.familypoints
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.DataSnapshot
@@ -26,6 +26,7 @@ class UserRoutineActivity : AppCompatActivity() {
     private val database = FirebaseDatabase.getInstance()
     private val tasks = TreeSet<Task>(TaskByTimeComparator())
     private lateinit var user: User
+    private lateinit var createUserActivityLauncher: ActivityResultLauncher<Set<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +58,7 @@ class UserRoutineActivity : AppCompatActivity() {
                 }
             }
         })
-
+        createUserActivityLauncher = registerForActivityResult()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -77,10 +78,20 @@ class UserRoutineActivity : AppCompatActivity() {
     }
 
     private fun openCreateActivity(): Boolean {
-        val userRoutineDatabase = database.getReference("user_routines/" + user.id + "/monday")
-        registerForActivityResult(RoutineTaskResultContract()) { task: Task? ->
+        createUserActivityLauncher.launch(tasks.map { it.time }.toSet())
+        return true
+    }
+
+    private fun onHomeUpOptionSelected(): Boolean {
+        super.onBackPressed()
+        return true;
+    }
+
+    private fun registerForActivityResult(): ActivityResultLauncher<Set<String>> {
+        return registerForActivityResult(RoutineTaskResultContract()) { task: Task? ->
             task?.let {
-                userRoutineDatabase.child(it.time)
+                val userRoutineDatabase = database.getReference("user_routines/" + user.id + "/monday/" + it.time)
+                userRoutineDatabase
                     .setValue(TaskDatabaseObject(it.name, it.icon))
                     .addOnSuccessListener { _ ->
                         tasks.add(it)
@@ -90,11 +101,5 @@ class UserRoutineActivity : AppCompatActivity() {
                     }
             }
         }
-        return true
-    }
-
-    private fun onHomeUpOptionSelected(): Boolean {
-        super.onBackPressed()
-        return true;
     }
 }
